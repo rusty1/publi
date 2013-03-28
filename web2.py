@@ -7,9 +7,20 @@ import pango
 import webkit
 import gobject
 import urllib2
+import ctypes
+
+libgobject = ctypes.CDLL('/usr/lib/i386-linux-gnu/libgobject-2.0.so.0')
+libwebkit = ctypes.CDLL('/usr/lib/i386-linux-gnu/libsoup-2.4.so.1')
+libsoup = ctypes.CDLL('/usr/lib/i386-linux-gnu/libsoup-2.4.so.1')
+libwebkit = ctypes.CDLL('/usr/lib/libwebkitgtk-1.0.so')
+
+proxy_uri = libsoup.soup_uri_new('http://24.97.18.43:3128') # set your proxy url
+
+session = libwebkit.webkit_get_default_session()
+libgobject.g_object_set(session, "proxy-uri", proxy_uri, None)
 
 class Browser:
-    proxy='http://24.97.18.43:3128'
+#    proxy='http://24.97.18.43:3128'
     default_site = "http://vufind.uhls.org/vufind"
 #   default_site = "http://hip.uhls.org/ipac20/ipac.jsp?profile=snlk"
     default_zoom=1.3
@@ -43,6 +54,7 @@ class Browser:
         # self.web_view.connect_after("populate-popup", self.populate_popup)
 
         self.web_view.open(self.default_site)
+        #urllib2.urlopen(self.default_site)
 
         toolbar = gtk.Toolbar()
 
